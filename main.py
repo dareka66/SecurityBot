@@ -5,10 +5,6 @@ email = ""
 password = ""
 client = samino.Client()
 client.login(email, password)
-with open("ghost_spam.txt", "w") as f: f.truncate(0)
-with open("text_spam.txt", "w") as f: f.truncate(0)
-with open("member_spam.txt", "w") as f: f.truncate(0)
-
 
 @client.event("on_video_chat_start")
 @client.event("on_avatar_chat_end")
