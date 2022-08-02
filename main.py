@@ -10,8 +10,8 @@ client = samino.Client()
 client.login(email, password, socket=True)
 
 
-def replacer(string): 
-    return string.replace("'", "").replace("/", "").replace('"',"").replace("*","").replace(".", "").replace(",","").replace("+","").replace("×","").replace("÷","").replace("=","").replace("_", "").replace("€", "").replace("£","").replace("¥", "").replace("₩", "").replace("!", "@").replace("#", "").replace("$", "%").replace("^", "").replace("&", "").replace("(", "").replace(")", "").replace("-", "").replace(":", "").replace(";", "").replace("`", "").replace("~", "").replace("\\", "").replace("|", "").replace("<", "").replace(">", "").replace("{", "").replace("}", "").replace("[", "").replace("]", "").replace("°", "").replace("•", "").replace("○", "").replace("●", "").replace("□", "").replace("■", "").replace("♤", "").replace("♡", "").replace("◇", "").replace("♧", "").replace("☆", "").replace("▪︎", "").replace("¤", "").replace("《", "").replace("》", "").replace("¡", "").replace("¿", "").replace("،", "").replace("؟", "").replace("!","").replace("َ", "").replace("ً", "").replace("ُ", "").replace("ٌ", "").replace("ْ", "").replace("ِ", "").replace("ٍ", "").replace("ّ", "").replace(" َ", "").replace(" ٕ", "").replace("ـ", "").replace(" ُ", "").replace(" ِ", "").replace("ٓ", "").replace(" ٰ", "").replace("ٖ", "").replace(" ً", "").replace(" ّ", "").replace("ٌ", "").replace(" ٍ", "").replace(" ْ", "").replace("ٔ", "")
+def replacer(string):
+    return string.replace("'", "").replace("/", "").replace('"',"").replace("*","").replace(".", "").replace(",","").replace("+","").replace("×","").replace("÷","").replace("=","").replace("_", "").replace("€", "").replace("£","").replace("¥", "").replace("₩", "").replace("!", "@").replace("#", "").replace("$", "%").replace("^", "").replace("&", "").replace("(", "").replace(")", "").replace("-", "").replace(":", "").replace(";", "").replace("`", "").replace("~", "").replace("\\", "").replace("|", "").replace("<", "").replace(">", "").replace("{", "").replace("}", "").replace("[", "").replace("]", "").replace("°", "").replace("•", "").replace("○", "").replace("●", "").replace("□", "").replace("■", "").replace("♤", "").replace("♡", "").replace("◇", "").replace("♧", "").replace("☆", "").replace("▪︎", "").replace("¤", "").replace("《", "").replace("》", "").replace("¡", "").replace("¿", "").replace("،", "").replace("؟", "").replace("!","").replace("َ", "").replace("ً", "").replace("ُ", "").replace("ٌ", "").replace("ْ", "").replace("ِ", "").replace("ٍ", "").replace("ّ", "").replace(" َ", "").replace(" ٕ", "").replace("ـ", "").replace(" ُ", "").replace(" ِ", "").replace("ٓ", "").replace(" ٰ", "").replace("ٖ", "").replace(" ً", "").replace(" ّ", "").replace("ٌ", "").replace(" ٍ", "").replace(" ْ", "").replace("ٔ", "").replace("%", "").replace("&", "")
 
 
 @client.event("on_video_chat_start")
@@ -34,6 +34,8 @@ def on_ghost_messages(data: samino.lib.Event):
 
         if author.userId != client.uid: file.writelines(f"{str(author.userId)}\n")
         if counter > 3: local.kick(chatId, author.userId, rejoin)
+        hosts = [local.get_chat_info(chatId).author.userId]
+        hosts.extend(local.get_chat_info(chatId).coHosts)
         if author.userId not in local.get_chat_info(chatId).coHosts: local.kick(chatId, author.userId, rejoin)
 
 
