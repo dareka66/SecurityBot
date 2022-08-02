@@ -1,10 +1,14 @@
 import samino
 import time
+import re
 
 email = ""
 password = ""
+banwords = ["shit"]
+rejoin = False
 client = samino.Client()
-client.login(email, password)
+client.login(email, password, socket=True)
+
 
 @client.event("on_video_chat_start")
 @client.event("on_avatar_chat_end")
@@ -20,12 +24,13 @@ def on_ghost_messages(data: samino.lib.Event):
     counter = 0
 
     with open("ghost_spam.txt", "r+") as file:
-        for line in file.read().splitlines():
-            if line == author.userId:
+        for line in file:
+            if line.strip("\n") == author.userId:
                 counter += 1
 
         if author.userId != client.uid: file.writelines(f"{str(author.userId)}\n")
-        elif counter > 4: local.kick(chatId, author.userId, False)
+        if counter > 3: local.kick(chatId, author.userId, rejoin)
+        if author.userId not in local.get_chat_info(chatId).coHosts: local.kick(chatId, author.userId, rejoin)
 
 
 @client.event("on_text_message")
@@ -38,13 +43,17 @@ def on_messages(data: samino.lib.Event):
     local = samino.Local(data.comId)
     counter = 0
 
-    with open("text_spam.txt", "r+") as file:
-        for line in file.read().splitlines():
-            if line == author.userId:
-                counter += 1
+    if len(re.findall(r'(https?://[^\s]+)', data.message.content)) > 0: local.kick(chatId, author.userId, rejoin)
 
+    for word in data.message.content.split(" "):
+        if word in banwords: local.kick(chatId, author.userId, rejoin)
+
+    with open("text_spam.txt", "r+") as file:
+        for line in file:
+            if line.strip("\n") == author.userId:
+                counter += 1
         if author.userId != client.uid: file.writelines(f"{str(author.userId)}\n")
-        elif counter > 4: local.kick(chatId, author.userId, False)
+        if counter > 3: local.kick(chatId, author.userId, rejoin)
 
 
 @client.event("on_group_member_join")
@@ -56,12 +65,12 @@ def on_members(data: samino.lib.Event):
     local = samino.Local(data.comId)
 
     with open("member_spam.txt", "r+") as file:
-        for line in file.read().splitlines():
-            if line == userId:
+        for line in file:
+            if line.strip("\n") == userId:
                 counter += 1
 
         if userId != client.uid: file.writelines(f"{str(userId)}\n")
-        if counter > 5: local.kick(chatId, userId, False)
+        if counter > 3: local.kick(chatId, userId, rejoin)
 
 
 def task():
