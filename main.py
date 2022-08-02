@@ -10,6 +10,10 @@ client = samino.Client()
 client.login(email, password, socket=True)
 
 
+def replacer(string): 
+    return string.replace("'", "").replace("/", "").replace('"',"").replace("*","").replace(".", "").replace(",","").replace("+","").replace("×","").replace("÷","").replace("=","").replace("_", "").replace("€", "").replace("£","").replace("¥", "").replace("₩", "").replace("!", "@").replace("#", "").replace("$", "%").replace("^", "").replace("&", "").replace("(", "").replace(")", "").replace("-", "").replace(":", "").replace(";", "").replace("`", "").replace("~", "").replace("\\", "").replace("|", "").replace("<", "").replace(">", "").replace("{", "").replace("}", "").replace("[", "").replace("]", "").replace("°", "").replace("•", "").replace("○", "").replace("●", "").replace("□", "").replace("■", "").replace("♤", "").replace("♡", "").replace("◇", "").replace("♧", "").replace("☆", "").replace("▪︎", "").replace("¤", "").replace("《", "").replace("》", "").replace("¡", "").replace("¿", "").replace("،", "").replace("؟", "").replace("!","").replace("َ", "").replace("ً", "").replace("ُ", "").replace("ٌ", "").replace("ْ", "").replace("ِ", "").replace("ٍ", "").replace("ّ", "").replace(" َ", "").replace(" ٕ", "").replace("ـ", "").replace(" ُ", "").replace(" ِ", "").replace("ٓ", "").replace(" ٰ", "").replace("ٖ", "").replace(" ً", "").replace(" ّ", "").replace("ٌ", "").replace(" ٍ", "").replace(" ْ", "").replace("ٔ", "")
+
+
 @client.event("on_video_chat_start")
 @client.event("on_avatar_chat_end")
 @client.event("on_video_chat_end")
@@ -45,7 +49,7 @@ def on_messages(data: samino.lib.Event):
 
     if len(re.findall(r'(https?://[^\s]+)', data.message.content)) > 0: local.kick(chatId, author.userId, rejoin)
 
-    for word in data.message.content.split(" "):
+    for word in replacer(data.message.content.split(" ")):
         if word in banwords: local.kick(chatId, author.userId, rejoin)
 
     with open("text_spam.txt", "r+") as file:
